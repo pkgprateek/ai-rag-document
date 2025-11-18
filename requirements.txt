@@ -19,7 +19,7 @@ langgraph-prebuilt==1.0.4
 langgraph-sdk==0.2.9
 langsmith==0.4.43
 markdown-it-py==4.0.0
-numpy==2.3.5
+numpy>=2.0
 oauthlib==3.3.1
 ollama==0.6.1
 pandas==2.3.3
