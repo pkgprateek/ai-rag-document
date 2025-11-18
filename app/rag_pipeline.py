@@ -3,8 +3,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_ollama import OllamaLLM
 from langchain_core.prompts import PromptTemplate
 from langchain_core.documents import Document
-from langchain_core.output_parsers import StrOutputParser
-from langchain_core.runnables import RunnablePassthrough
+from langchain_core.runnables import RunnableParallel, RunnablePassthrough
 from typing import List
 
 class RAGPipeline:
@@ -33,7 +32,7 @@ class RAGPipeline:
             You are an helpful assistant, so if you don't know the answer, just say that you don't know.
             Do not hallucinate. Do not make up information. Do not guess. Do not lie.
             Use factual information to answer the question. Verify the information you provide.
-            Always cite the source of your answer in the format [Source: source_name]".
+            Prettify your answer with markdown formatting.".
             
             Context: {context}
 
@@ -42,17 +41,18 @@ class RAGPipeline:
             Answer:
             """
         )
-
-        def format_docs(docs):
-            return "\n\n".join(doc.page_content for doc in docs)
-
-        self.rag_chain = (
-            {"context": self.vector_store.as_retriever(search_kwargs={"k": 4}) | format_docs, "question": RunnablePassthrough()}
-            | prompt
-            | self.llm
-            | StrOutputParser()
+        retriever = self.vector_store.as_retriever(search_kwargs={"k": 4})
+        rag_chain = RunnableParallel(
+            {
+                "result": (
+                    {"context": retriever, "question": RunnablePassthrough()}
+                    | prompt
+                    | self.llm
+                ), 
+                "source_documents": retriever,
+            }
         )
-        return self.rag_chain
+        return rag_chain
     
 
     def add_documents(self, documents: List[Document]) -> None:
@@ -62,16 +62,15 @@ class RAGPipeline:
         # as documents are automatically persisted when added
 
     
-    def query(self, question: str) -> dict:
+    def query(self, question: str):
         """Query the RAG pipeline with a question"""
-        # Get relevant documents
-        retriever = self.vector_store.as_retriever(search_kwargs={"k": 4})
-        source_docs = retriever.invoke(question)
-        
         # Get answer from chain
+        # try:
+        #     answer = self.rag_chain.invoke({"question": question})
+        # except TypeError:
         answer = self.rag_chain.invoke(question)
         
         return {
-            "answer": answer,
-            "sources": source_docs
+            "answer": answer["result"],
+            "sources": answer["source_documents"]
         }
