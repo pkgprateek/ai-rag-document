@@ -2,16 +2,32 @@ import gradio as gr
 from rag_pipeline import RAGPipeline
 from document_processor import DocumentProcessor
 import os
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv()
 
 
 class DocumentRagApp:
     def __init__(self):
+        """
+        Initialize Document RAG application with processor and pipeline.
+        Loads environment variables and sets up components.
+        """
         self.processor = DocumentProcessor()
         self.rag_pipeline = RAGPipeline()
         self.loaded_documents = []
 
     def process_document(self, file):
-        """Process uplaoded document and add to RAG"""
+        """
+        Process uploaded document (PDF/DOCX/TXT) and add to RAG system.
+
+        Args:
+            file: Gradio file upload object
+
+        Returns:
+            str: Status message with processing results or error
+        """
         if file is None:
             return "Please upload a file."
         try:
@@ -36,6 +52,15 @@ class DocumentRagApp:
             return f"Error processing file: {str(e)}"
 
     def ask_question(self, question):
+        """
+        Answer user question using RAG pipeline with rate limiting.
+
+        Args:
+            question: User's question string
+
+        Returns:
+            str: Generated answer or error message
+        """
         if not self.loaded_documents:
             return "Please upload and process a document before asking questions."
 
@@ -46,14 +71,6 @@ class DocumentRagApp:
             result = self.rag_pipeline.query(question)
             answer = result["answer"]
             return answer
-            # sources = result["sources"]
-            # source_response = ""
-            # for i, doc in enumerate(sources[:3], start=1):
-            # src_name = doc.metadata.get("source", "Unknown Source")
-            # content_preview = doc.page_content[:100] + "..."
-            # source_response += f"\n{i}. {src_name}\n '{content_preview}'\n"
-            # source_response += f"\n{i}. {content_preview}\n"
-            # return answer, source_response
         except Exception as e:
             return f"Error answering question: {str(e)}"
 
@@ -87,11 +104,7 @@ with gr.Blocks(title="AI Document QA System") as demo:
 
         with gr.Column(scale=2):
             gr.Markdown("### 3. Answer")
-
             answer_output = gr.Markdown(container=True, min_height="480px")
-            # sources_output = gr.Markdown(
-            #     label="Sources", container=True, min_height="120px"
-            # )
 
         # Connect all functions
         process_btn.click(
@@ -102,8 +115,7 @@ with gr.Blocks(title="AI Document QA System") as demo:
             fn=app.ask_question,
             inputs=[question_input],
             outputs=[answer_output],
-            # outputs=[answer_output, sources_output],
         )
 
 if __name__ == "__main__":
-    demo.launch(share=True)
+    demo.launch(share=False)
