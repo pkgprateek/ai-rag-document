@@ -13,6 +13,11 @@ jobs:
   check-size:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          
       - name: Check large files
         uses: ActionsDesk/lfs-warning@v2.0
         with:
