@@ -8,7 +8,7 @@ sdk_version: 5.49.1
 app_file: app/main.py
 pinned: false
 license: mit
-short_description: Production RAG system with automated CI/CD - Ask questions about your documents
+short_description: RAG-powered document Q&A (100+ pages -> 5 secs)
 full_width: true
 ---
 
