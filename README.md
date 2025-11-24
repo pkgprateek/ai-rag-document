@@ -1,5 +1,5 @@
 ---
-title: AI Intelligent Document Chat (with RAG)
+title: RAG Document Question-Answer System
 emoji: 📚
 colorFrom: blue
 colorTo: green
@@ -17,7 +17,7 @@ GitHub Repository: https://github.com/pkgprateek/ai-rag-document
 View source code, CI/CD setup, and contribution guidelines
 -->
 
-# AI Document Intelligence System
+# RAG Document Question Answer System
 
 > Production-ready RAG-powered document Q&A with automated CI/CD deployment
 
@@ -30,7 +30,7 @@ View source code, CI/CD setup, and contribution guidelines
 
 ## Live Demo
 
-**Try it now**: [AI Document Intelligence on Hugging Face Spaces](https://huggingface.co/spaces/pkgprateek/ai-rag-document)
+**Try it now**: [RAG Document QA on Hugging Face Spaces](https://huggingface.co/spaces/pkgprateek/ai-rag-document)
 
 Upload documents (PDF, DOCX, TXT) and ask questions - get citation-backed answers powered by RAG.
 
@@ -222,7 +222,7 @@ This project is available under the MIT License - see LICENSE file for details.
 
 - GitHub: [@pkgprateek](https://github.com/pkgprateek)
 - Hugging Face: [@pkgprateek](https://huggingface.co/pkgprateek)
-- Live Demo: [AI Document Intelligence](https://huggingface.co/spaces/pkgprateek/ai-rag-document)
+- Live Demo: [RAG Document QA](https://huggingface.co/spaces/pkgprateek/ai-rag-document)
 
 ---
 
